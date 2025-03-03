@@ -1,0 +1,15 @@
+<svg width="240" height="50" viewBox="0 0 240 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fondo del hexágono -->
+  <path d="M35 5L45 11V23L35 29L25 23V11L35 5Z" fill="#2563EB"/>
+  
+  <!-- Icono de cubo dentro del hexágono -->
+  <path d="M35 11L41 14V20L35 23L29 20V14L35 11Z" fill="white"/>
+  <path d="M35 11L41 14L35 17L29 14L35 11Z" fill="#f8f8f8"/>
+  <path d="M41 14V20L35 23V17L41 14Z" fill="#e0e0e0"/>
+  
+  <!-- Texto del logo -->
+  <text x="55" y="32" font-family="Arial, sans-serif" font-weight="bold" font-size="24" letter-spacing="-0.5" fill="#1F2937">
+    GAME
+    <tspan x="130" y="32" fill="#2563EB">STORE</tspan>
+  </text>
+</svg> 

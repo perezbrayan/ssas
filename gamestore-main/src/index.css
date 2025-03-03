@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .nav-link {
+    @apply text-gray-700 font-medium transition-all duration-200 hover:text-primary-600 hover:scale-105;
+  }
+}
+
+/* Colores pastel para las secciones principales */
+.bg-main-section {
+  background-color: #000000; /* Cambiado a negro */
+}
+
+.bg-secondary-section {
+  background-color: #fdf2f8; /* Rosa pastel muy suave */
+}
+
+.bg-featured-section {
+  background-color: #f0fdf4; /* Verde pastel muy suave */
+}
+
+.bg-categories-section {
+  background-color: #fff8f1; /* Naranja pastel muy suave */
+}
+
+.hero-background {
+  background-image: url('https://imgur.com/sHZUG7I.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed; /* Mantiene la imagen fija al hacer scroll */
+  will-change: transform; /* Optimiza el rendimiento del scroll */
+}
+
+.hero-overlay {
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.2) 100%);
+}
+body {
+  background-color: #f8f9fa; /* Gris pastel muy suave para el fondo general */
+}
+
