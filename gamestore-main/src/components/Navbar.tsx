@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, ShoppingCart, User, Gamepad2, Home, Gift, Sparkles, Tag, Trash2, MessageSquare, Users, LogOut, Globe } from 'lucide-react';
+import { Menu, X, ShoppingCart, User, Gamepad2, Home, Gift, Sparkles, Tag, Trash2, MessageSquare, Users, LogOut, Globe, Trophy, Sword, Gamepad } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useClickOutside } from '../hooks/useClickOutside';
 import { useLanguage } from '../context/LanguageContext';
@@ -281,11 +281,90 @@ const Navbar = () => {
 
               {/* Navigation Links */}
               <div className="hidden lg:flex items-center gap-2">
-                {navLinks.map((link) => (
-                  <NavLink key={link.to} to={link.to} icon={link.icon}>
-                    {link.label}
-                  </NavLink>
-                ))}
+                {navLinks.map((link, index) => 
+                  link.to === "/fortnite-shop" ? (
+                    <div key={index} className="relative group">
+                      <NavLink to={link.to} icon={link.icon}>
+                        {link.label}
+                      </NavLink>
+                      <div className="absolute left-0 mt-2 w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                        <div className="bg-[#051923] rounded-xl shadow-lg border border-gray-800 overflow-hidden">
+                          <div className="p-2">
+                            <button
+                              onClick={() => {
+                                const event = new CustomEvent('gameSelected', { detail: 'fortnite' });
+                                window.dispatchEvent(event);
+                                navigate('/fortnite-shop?game=fortnite');
+                              }}
+                              className="w-full flex items-center gap-2 px-4 py-2 rounded-lg text-gray-300 hover:bg-primary-700/20 transition-all"
+                            >
+                              <div className="p-1 rounded bg-primary-700/20">
+                                <Trophy className="w-4 h-4" />
+                              </div>
+                              <span className="text-sm font-medium">Fortnite</span>
+                            </button>
+                            <button
+                              onClick={() => {
+                                const event = new CustomEvent('gameSelected', { detail: 'roblox' });
+                                window.dispatchEvent(event);
+                                navigate('/fortnite-shop?game=roblox');
+                              }}
+                              className="w-full flex items-center gap-2 px-4 py-2 rounded-lg text-gray-300 hover:bg-primary-700/20 transition-all"
+                            >
+                              <div className="p-1 rounded bg-primary-700/20">
+                                <Sword className="w-4 h-4" />
+                              </div>
+                              <span className="text-sm font-medium">Roblox</span>
+                            </button>
+                            <button
+                              onClick={() => {
+                                const event = new CustomEvent('gameSelected', { detail: 'supercell' });
+                                window.dispatchEvent(event);
+                                navigate('/fortnite-shop?game=supercell');
+                              }}
+                              className="w-full flex items-center gap-2 px-4 py-2 rounded-lg text-gray-300 hover:bg-primary-700/20 transition-all"
+                            >
+                              <div className="p-1 rounded bg-primary-700/20">
+                                <Trophy className="w-4 h-4" />
+                              </div>
+                              <span className="text-sm font-medium">SuperCell</span>
+                            </button>
+                            <button
+                              onClick={() => {
+                                const event = new CustomEvent('gameSelected', { detail: 'streaming' });
+                                window.dispatchEvent(event);
+                                navigate('/fortnite-shop?game=streaming');
+                              }}
+                              className="w-full flex items-center gap-2 px-4 py-2 rounded-lg text-gray-300 hover:bg-primary-700/20 transition-all"
+                            >
+                              <div className="p-1 rounded bg-primary-700/20">
+                                <Gamepad className="w-4 h-4" />
+                              </div>
+                              <span className="text-sm font-medium">Streaming</span>
+                            </button>
+                            <button
+                              onClick={() => {
+                                const event = new CustomEvent('gameSelected', { detail: 'leagueoflegends' });
+                                window.dispatchEvent(event);
+                                navigate('/fortnite-shop?game=leagueoflegends');
+                              }}
+                              className="w-full flex items-center gap-2 px-4 py-2 rounded-lg text-gray-300 hover:bg-primary-700/20 transition-all"
+                            >
+                              <div className="p-1 rounded bg-primary-700/20">
+                                <Sword className="w-4 h-4" />
+                              </div>
+                              <span className="text-sm font-medium">League of Legends</span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <NavLink key={index} to={link.to} icon={link.icon}>
+                      {link.label}
+                    </NavLink>
+                  )
+                )}
               </div>
             </div>
 

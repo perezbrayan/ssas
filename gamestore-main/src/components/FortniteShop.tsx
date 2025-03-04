@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { getDailyShop } from '../services/fortniteApi';
 import { Filter, ChevronDown, ChevronUp, Loader2, ShoppingCart, X, Gamepad, Sword, Trophy } from 'lucide-react';
 import { useCart } from '../context/CartContext';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations';
 import { robloxService, RobloxProduct } from '../services/robloxService';
@@ -72,6 +72,11 @@ interface ShopItem {
 
 const FortniteShop: React.FC = () => {
   const { addItem, getItemQuantity, hasItems } = useCart();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { language } = useLanguage();
+  const t = translations[language];
   const [items, setItems] = useState<ShopItem[]>([]);
   const [filteredItems, setFilteredItems] = useState<ShopItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -82,9 +87,6 @@ const FortniteShop: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
   const [selectedItemForModal, setSelectedItemForModal] = useState<ShopItem | null>(null);
-  const location = useLocation();
-  const { language } = useLanguage();
-  const t = translations[language];
 
   // Estados para los filtros
   const [rarityFilters, setRarityFilters] = useState<string[]>([]);
@@ -94,7 +96,10 @@ const FortniteShop: React.FC = () => {
   const [isRarityOpen, setIsRarityOpen] = useState(false);
   const [isPriceFilterOpen, setIsPriceFilterOpen] = useState(false);
 
-  const [selectedGame, setSelectedGame] = useState<'fortnite' | 'roblox'>('fortnite');
+  // Modificar el estado inicial de selectedGame para leer desde URL
+  const [selectedGame, setSelectedGame] = useState<'fortnite' | 'roblox' | 'supercell' | 'streaming' | 'leagueoflegends'>(
+    (searchParams.get('game') as 'fortnite' | 'roblox' | 'supercell' | 'streaming' | 'leagueoflegends') || 'fortnite'
+  );
   const [robloxProducts, setRobloxProducts] = useState<RobloxProduct[]>([]);
   const [loadingRoblox, setLoadingRoblox] = useState(false);
   const [robloxError, setRobloxError] = useState<string | null>(null);
@@ -118,6 +123,29 @@ const FortniteShop: React.FC = () => {
       loadRobloxProducts();
     }
   }, [selectedGame]);
+
+  // Modificar el efecto del evento gameSelected
+  useEffect(() => {
+    const handleGameSelected = (event: CustomEvent<string>) => {
+      const game = event.detail as 'fortnite' | 'roblox' | 'supercell' | 'streaming' | 'leagueoflegends';
+      setSelectedGame(game);
+      setSearchParams({ game });
+    };
+
+    window.addEventListener('gameSelected', handleGameSelected as EventListener);
+
+    return () => {
+      window.removeEventListener('gameSelected', handleGameSelected as EventListener);
+    };
+  }, [setSearchParams]);
+
+  // Agregar efecto para sincronizar URL con estado
+  useEffect(() => {
+    const game = searchParams.get('game') as 'fortnite' | 'roblox' | 'supercell' | 'streaming' | 'leagueoflegends';
+    if (game && game !== selectedGame) {
+      setSelectedGame(game);
+    }
+  }, [searchParams, selectedGame]);
 
   const fetchItems = async () => {
     try {
@@ -385,6 +413,7 @@ const FortniteShop: React.FC = () => {
                     </div>
                     <span className="text-sm sm:text-base font-medium">Fortnite</span>
                   </button>
+                  
                   <button
                     onClick={() => setSelectedGame('roblox')}
                     className={`flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3 rounded-lg transition-all ${
@@ -397,6 +426,48 @@ const FortniteShop: React.FC = () => {
                       <Sword className="w-4 h-4 sm:w-5 sm:h-5" />
                     </div>
                     <span className="text-sm sm:text-base font-medium">Roblox</span>
+                  </button>
+
+                  <button
+                    onClick={() => setSelectedGame('supercell')}
+                    className={`flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3 rounded-lg transition-all ${
+                      selectedGame === 'supercell'
+                        ? 'bg-primary-600 text-white'
+                        : 'text-gray-300 hover:bg-primary-700/20'
+                    }`}
+                  >
+                    <div className={`p-1 rounded ${selectedGame === 'supercell' ? 'bg-primary-700' : 'bg-primary-700/20'}`}>
+                      <Trophy className="w-4 h-4 sm:w-5 sm:h-5" />
+                    </div>
+                    <span className="text-sm sm:text-base font-medium">SuperCell</span>
+                  </button>
+
+                  <button
+                    onClick={() => setSelectedGame('streaming')}
+                    className={`flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3 rounded-lg transition-all ${
+                      selectedGame === 'streaming'
+                        ? 'bg-primary-600 text-white'
+                        : 'text-gray-300 hover:bg-primary-700/20'
+                    }`}
+                  >
+                    <div className={`p-1 rounded ${selectedGame === 'streaming' ? 'bg-primary-700' : 'bg-primary-700/20'}`}>
+                      <Gamepad className="w-4 h-4 sm:w-5 sm:h-5" />
+                    </div>
+                    <span className="text-sm sm:text-base font-medium">Streaming</span>
+                  </button>
+
+                  <button
+                    onClick={() => setSelectedGame('leagueoflegends')}
+                    className={`flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3 rounded-lg transition-all ${
+                      selectedGame === 'leagueoflegends'
+                        ? 'bg-primary-600 text-white'
+                        : 'text-gray-300 hover:bg-primary-700/20'
+                    }`}
+                  >
+                    <div className={`p-1 rounded ${selectedGame === 'leagueoflegends' ? 'bg-primary-700' : 'bg-primary-700/20'}`}>
+                      <Sword className="w-4 h-4 sm:w-5 sm:h-5" />
+                    </div>
+                    <span className="text-sm sm:text-base font-medium">League of Legends</span>
                   </button>
                 </div>
               </div>
@@ -715,7 +786,7 @@ const FortniteShop: React.FC = () => {
                   </div>
                 )}
               </div>
-            ) : (
+            ) : selectedGame === 'roblox' ? (
               <div>
                 {loadingRoblox ? (
                   <div className="flex items-center justify-center h-64">
@@ -787,7 +858,19 @@ const FortniteShop: React.FC = () => {
                   </div>
                 )}
               </div>
-            )}
+            ) : selectedGame === 'supercell' ? (
+              <div className="text-center py-12">
+                <p className="text-gray-300">Próximamente: Contenido de SuperCell</p>
+              </div>
+            ) : selectedGame === 'streaming' ? (
+              <div className="text-center py-12">
+                <p className="text-gray-300">Próximamente: Contenido de Streaming</p>
+              </div>
+            ) : selectedGame === 'leagueoflegends' ? (
+              <div className="text-center py-12">
+                <p className="text-gray-300">Próximamente: Contenido de League of Legends</p>
+              </div>
+            ) : null}
           </div>
         </div>
       </div>
